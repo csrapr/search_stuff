@@ -1,0 +1,20 @@
+[
+  {
+    "alcoholic": true,
+    "type": "beer",
+    "name": "fino",
+    "price": "1.5"
+  },
+  {
+    "alcoholic": false,
+    "type": "juice",
+    "name": "coca cola",
+    "price": "1.2"
+  },
+  {
+    "alcoholic": false,
+    "type": "other",
+    "name": "café espresso",
+    "price": "0.7"
+  }
+]

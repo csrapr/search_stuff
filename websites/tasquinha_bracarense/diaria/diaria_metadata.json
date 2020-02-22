@@ -1,0 +1,10 @@
+{
+  "price": "3.8",
+  "included": ["plate", "beverage", "coffee", "dessert"],
+  "menu": [
+    "massa à bolognesa",
+    "cordon bleu",
+    "frango assado",
+    "hamburguer especial"
+  ]
+}

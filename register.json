@@ -1,0 +1,29 @@
+[
+  {
+    "name": "taberna_belga",
+    "type": "directory",
+    "children": [
+      {
+        "name": "restaurante",
+        "type": "directory",
+        "children": [{ "name": "restaurante_metadata.json", "type": "file" }]
+      }
+    ]
+  },
+  {
+    "name": "tasquinha_bracarense",
+    "type": "directory",
+    "children": [
+      {
+        "name": "bar",
+        "type": "directory",
+        "children": [{ "name": "bar_metadata.json", "type": "file" }]
+      },
+      {
+        "name": "diaria",
+        "type": "directory",
+        "children": [{ "name": "diaria_metadata.json", "type": "file" }]
+      }
+    ]
+  }
+]
