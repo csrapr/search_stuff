@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  if department == "diaria"
+    .container
+      .card(style='width: 18rem;')
+        .card-body
+          h5.card-title= restaurantMatch.saneName
+          h6.card-subtitle.mb-2.text-muted= department
+      .card.mt-2(style='width: 18rem;')
+        .card-header
+          | Preço (€)
+        ul.list-group.list-group-flush
+          li.list-group-item= metadata.price
+        .card-header
+          | Incluído no menu
+        ul.list-group.list-group-flush
+          each item in metadata.included
+            li.list-group-item= item
+        .card-header
+          | Menus
+        ul.list-group.list-group-flush
+          each item in metadata.menu
+            li.list-group-item= item
+  if department == "bar"
+    .container
+      .card(style='width: 18rem;')
+        .card-body
+          h5.card-title= restaurantMatch.saneName
+          h6.card-subtitle.mb-2.text-muted= department
+      .card.mt-2(style='width: 18rem;')
+        .card-header
+          | Bebidas Alcoólicas
+        ul.list-group.list-group-flush
+          each drink in metadata
+            if drink.alcoholic
+              li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
+        .card-header
+          | Outras Bebidas
+        ul.list-group.list-group-flush
+          each drink in metadata
+            if !drink.alcoholic
+              li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
+  if department == "restaurante"
+    .container
+      .card(style='width: 18rem;')
+        .card-body
+          h5.card-title= restaurantMatch.saneName
+          h6.card-subtitle.mb-2.text-muted= department
+      .card.mt-2(style='width: 18rem;')
+        .card-header
+          | Menu
+        ul.list-group.list-group-flush
+          each meal in metadata
+            li.list-group-item !{meal.name} - !{meal.price}€
+            

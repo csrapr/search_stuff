@@ -1,58 +1,64 @@
 var express = require("express");
 var router = express.Router();
-var Fuse = require("fuse.js");
+var funcs = require("../functions/funcs");
+const jsonfile = require("jsonfile");
+
 /* Home page */
-router.get("/", function(req, res, next) {
+router.get("/", function (req, res, next) {
   res.render("index");
 });
 
-router.get("/search", (req, res, next) => {
-  let searchTerm = req.query.q;
-  if (searchTerm) {
-    let register = [
-      {
-        name: "taberna_belga",
-        type: "directory",
-        children: [
-          {
-            name: "restaurante",
-            type: "directory",
-            children: [{ name: "restaurante_metadata.json", type: "file" }]
-          }
-        ]
-      },
-      {
-        name: "tasquinha_bracarense",
-        type: "directory",
-        children: [
-          {
-            name: "bar",
-            type: "directory",
-            children: [{ name: "bar_metadata.json", type: "file" }]
-          },
-          {
-            name: "diaria",
-            type: "directory",
-            children: [{ name: "diaria_metadata.json", type: "file" }]
-          }
-        ]
-      }
-    ];
+router.get("/getinfo", async (req, res, next) => {
+  let data = funcs.getRegister();
+  let searchResults = funcs.searchRegister(data, req.query.searchTerm);
+  searchResults.forEach((result) => {
+    result.saneName = result.item.name.split("_").join(" ");
+  });
+  let restaurantMatch = searchResults.find(
+    (result) => result.item.name === req.query.name
+  );
 
-    var options = {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      minMatchCharLength: 1,
-      keys: ["name", "children.name"]
-    };
-    var fuse = new Fuse(register, options); // "list" is the item array
-    var result = fuse.search(searchTerm);
-    res.jsonp(result);
-  } else {
-    res.redirect("/");
+  let restaurantDepartment = restaurantMatch.matches.find(
+    (item) => item.key === "children.name"
+  ).value;
+
+  let metadataPath = restaurantMatch.item.children.find(
+    (child) => child.name === restaurantDepartment
+  );
+
+  let metadata = jsonfile.readFileSync(
+    `websites/${req.query.name}/${restaurantDepartment}/${metadataPath.children[0].name}`
+  );
+  console.log({
+    metadata: metadata,
+    restaurantMatch,
+    department: restaurantDepartment,
+  });
+  res.render("detailspage", {
+    metadata: metadata,
+    restaurantMatch,
+    department: restaurantDepartment,
+  });
+});
+
+router.get("/search", async (req, res, next) => {
+  try {
+    let searchTerm = req.query.q;
+    if (searchTerm) {
+      let data = funcs.getRegister();
+      let searchResults = funcs.searchRegister(data, searchTerm);
+      searchResults.forEach((result) => {
+        result.saneName = result.item.name.split("_").join(" ");
+      });
+      res.render("resultspage", {
+        searchTerm: searchTerm,
+        results: searchResults,
+      });
+    } else {
+      res.redirect("/");
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
