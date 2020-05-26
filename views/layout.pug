@@ -7,4 +7,13 @@ html
     link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh", crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    .container
+        h1 Leisure Search
+        form(method="GET" action="/search")
+          .form-group
+            label(for='searchBox') Search Activities
+            input#searchBox.form-control(type='text' placeholder='Search term' name="q")
+          .form-group
+            input.btn.btn-success(type="submit" value="Search now")
+    hr.m-5
     block content

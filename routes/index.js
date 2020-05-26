@@ -11,34 +11,45 @@ router.get("/", function (req, res, next) {
 router.get("/getinfo", async (req, res, next) => {
   let data = funcs.getRegister();
   let searchResults = funcs.searchRegister(data, req.query.searchTerm);
+
   searchResults.forEach((result) => {
     result.saneName = result.item.name.split("_").join(" ");
   });
+
   let restaurantMatch = searchResults.find(
     (result) => result.item.name === req.query.name
   );
 
-  let restaurantDepartment = restaurantMatch.matches.find(
+  let resDepartment = restaurantMatch.matches.find(
     (item) => item.key === "children.name"
-  ).value;
-
-  let metadataPath = restaurantMatch.item.children.find(
-    (child) => child.name === restaurantDepartment
   );
+  let restaurantDepartment = resDepartment ? resDepartment.value : null;
 
-  let metadata = jsonfile.readFileSync(
-    `websites/${req.query.name}/${restaurantDepartment}/${metadataPath.children[0].name}`
-  );
-  console.log({
-    metadata: metadata,
-    restaurantMatch,
-    department: restaurantDepartment,
-  });
-  res.render("detailspage", {
-    metadata: metadata,
-    restaurantMatch,
-    department: restaurantDepartment,
-  });
+  if (!restaurantDepartment) {
+    if (!Array.isArray(restaurantMatch)) {
+      restaurantMatch = [restaurantMatch];
+    }
+    console.log(restaurantMatch[0].item.children);
+    res.render("other_details", { restaurantMatch });
+  } else {
+    let metadataPath = restaurantMatch.item.children.find(
+      (child) => child.name === restaurantDepartment
+    );
+
+    let metadata = jsonfile.readFileSync(
+      `websites/${req.query.name}/${restaurantDepartment}/${metadataPath.children[0].name}`
+    );
+    console.log({
+      metadata: metadata,
+      restaurantMatch,
+      department: restaurantDepartment,
+    });
+    res.render("detailspage", {
+      metadata: metadata,
+      restaurantMatch,
+      department: restaurantDepartment,
+    });
+  }
 });
 
 router.get("/search", async (req, res, next) => {

@@ -1,6 +1,11 @@
 extends layout
 
 block content
+  .container
+    h5 Services by !{restaurantMatch.saneName}:
+    each department in restaurantMatch.item.children
+      a.btn.btn-light.m-1(role="button" href=`getinfo?name=${restaurantMatch.item.name}&searchTerm=${department.name}`)= department.name
+  hr
   if department == "diaria"
     .container
       .card(style='width: 18rem;')
