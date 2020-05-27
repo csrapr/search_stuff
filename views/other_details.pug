@@ -2,8 +2,8 @@ extends layout
 
 block content
   each result in restaurantMatch
-    h3 Services by !{result.saneName}
-    hr
     .container
+      h3 Services by !{result.saneName}
+      hr
       each department in result.item.children
         a.btn.btn-light.m-1(role="button" href=`getinfo?name=${result.item.name}&searchTerm=${department.name}`)= department.name
