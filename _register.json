@@ -15,7 +15,6 @@
     "name": "taberna_belga",
     "type": "directory",
     "children": [
-      { "name": "metadata.json", "type": "file" },
       {
         "name": "restaurante",
         "type": "directory",
@@ -36,8 +35,7 @@
         "name": "diaria",
         "type": "directory",
         "children": [{ "name": "diaria_metadata.json", "type": "file" }]
-      },
-      { "name": "metadata.json", "type": "file" }
+      }
     ]
   }
 ]

@@ -1,61 +1,78 @@
 extends layout
 
+
 block content
+  script var restaurantLocation = '#{restaurantMetadata["location"]}'
   .container
     h5 Services by !{restaurantMatch.saneName}:
     each department in restaurantMatch.item.children
       a.btn.btn-light.m-1(role="button" href=`getinfo?name=${restaurantMatch.item.name}&searchTerm=${department.name}`)= department.name
   hr
-  if department == "diaria"
-    .container
-      .card(style='width: 18rem;')
-        .card-body
-          h5.card-title= restaurantMatch.saneName
-          h6.card-subtitle.mb-2.text-muted= department
-      .card.mt-2(style='width: 18rem;')
-        .card-header
-          | Preço (€)
-        ul.list-group.list-group-flush
-          li.list-group-item= metadata.price
-        .card-header
-          | Incluído no menu
-        ul.list-group.list-group-flush
-          each item in metadata.included
-            li.list-group-item= item
-        .card-header
-          | Menus
-        ul.list-group.list-group-flush
-          each item in metadata.menu
-            li.list-group-item= item
-  if department == "bar"
-    .container
-      .card(style='width: 18rem;')
-        .card-body
-          h5.card-title= restaurantMatch.saneName
-          h6.card-subtitle.mb-2.text-muted= department
-      .card.mt-2(style='width: 18rem;')
-        .card-header
-          | Bebidas Alcoólicas
-        ul.list-group.list-group-flush
-          each drink in metadata
-            if drink.alcoholic
-              li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
-        .card-header
-          | Outras Bebidas
-        ul.list-group.list-group-flush
-          each drink in metadata
-            if !drink.alcoholic
-              li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
-  if department == "restaurante"
-    .container
-      .card(style='width: 18rem;')
-        .card-body
-          h5.card-title= restaurantMatch.saneName
-          h6.card-subtitle.mb-2.text-muted= department
-      .card.mt-2(style='width: 18rem;')
-        .card-header
-          | Menu
-        ul.list-group.list-group-flush
-          each meal in metadata
-            li.list-group-item !{meal.name} - !{meal.price}€
-            
+  .container
+    .row
+      .col-sm
+        .card(style='width: 18rem;')
+          .card-body
+            h5.card-title= restaurantMatch.saneName
+            h6.card-subtitle.mb-2.text-muted= department
+            if restaurantMetadata.open === true
+              p.text-success Aberto agora!
+            if restaurantMetadata.open === false
+              p.text-danger Fechado
+        if department == "diaria"
+            .card.mt-2(style='width: 18rem;')
+              .card-header
+                | Preço (€)
+              ul.list-group.list-group-flush
+                li.list-group-item= departmentMetadata.price
+              .card-header
+                | Incluído no menu
+              ul.list-group.list-group-flush
+                each item in departmentMetadata.included
+                  li.list-group-item= item
+              .card-header
+                | Menus
+              ul.list-group.list-group-flush
+                each item in departmentMetadata.menu
+                  li.list-group-item= item
+        if department == "bar"
+            .card.mt-2(style='width: 18rem;')
+              .card-header
+                | Bebidas Alcoólicas
+              ul.list-group.list-group-flush
+                each drink in departmentMetadata
+                  if drink.alcoholic
+                    li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
+              .card-header
+                | Outras Bebidas
+              ul.list-group.list-group-flush
+                each drink in departmentMetadata
+                  if !drink.alcoholic
+                    li.list-group-item !{drink.type} - !{drink.name} - !{drink.price}€
+        if department == "restaurante"
+            .card.mt-2(style='width: 18rem;')
+              .card-header
+                | Menu
+              ul.list-group.list-group-flush
+                each meal in departmentMetadata
+                  li.list-group-item !{meal.name} - !{meal.price}€
+      .col-sm
+        .card(style='width: 18rem;')
+          .card-header
+            | Horário
+          ul.list-group.list-group-flush
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 1 ? "bg-info" : "") Segunda: !{restaurantMetadata.schedule["1"][0]} - !{restaurantMetadata.schedule["1"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 2 ? "bg-info" : "") Terça: !{restaurantMetadata.schedule["2"][0]} - !{restaurantMetadata.schedule["2"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 3 ? "bg-info" : "") Quarta: !{restaurantMetadata.schedule["3"][0]} - !{restaurantMetadata.schedule["3"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 4 ? "bg-info" : "") Quinta: !{restaurantMetadata.schedule["4"][0]} - !{restaurantMetadata.schedule["4"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 5 ? "bg-info" : "") Sexta: !{restaurantMetadata.schedule["5"][0]} - !{restaurantMetadata.schedule["5"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 6 ? "bg-info" : "") Sábado: !{restaurantMetadata.schedule["6"][0]} - !{restaurantMetadata.schedule["6"][1]}
+            li.list-group-item(class= restaurantMetadata.dayOfTheWeek === 7 ? "bg-info" : "") Domingo: !{restaurantMetadata.schedule["7"][0]} - !{restaurantMetadata.schedule["7"][1]}
+      .col-sm
+        .card(style='width: 18rem;')
+          .card-header
+            | Distância
+          .card-body(id="location-card-body")
+            a.btn.btn-primary(href="#" id="request-location-button" onClick="getUserLocation()") Permitir Localização
+block scripts
+  script(src="/javascripts/details.js")

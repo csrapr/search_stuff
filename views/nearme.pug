@@ -1,0 +1,16 @@
+extends layout
+
+
+block content
+  .container
+    a(href="#" id="get-location-btn")
+    each item in data
+      .div(id=item.name)
+        .card.mt-4(style='width: 18rem;')
+          .card-header(data=item.metadata.location)= item.saneName
+          each child in item.children
+            ul.list-group.list-group-flush
+              li.list-group-item
+                a.btn.btn-light(href=`/getinfo?name=${item.name}&searchTerm=${child.name}`)= child.name
+block scripts
+  script(src="/javascripts/nearme.js")

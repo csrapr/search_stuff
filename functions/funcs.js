@@ -22,9 +22,14 @@ const searchRegister = (data, searchTerm) => {
   return result;
 };
 
+const getRestaurantMetadata = (restaurantName) => {
+  let data = jsonfile.readFileSync(`websites/${restaurantName}/metadata.json`);
+  return data;
+};
+
 exports.getRegister = getRegister;
 exports.searchRegister = searchRegister;
-
+exports.getRestaurantMetadata = getRestaurantMetadata;
 /*
 pesquisa por "bar"
 [
